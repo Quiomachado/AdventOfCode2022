@@ -75,9 +75,6 @@ public class Main {
             }
         }
         for (int i = 1; i <= stacks.size(); i++) {
-            if (stacks.get(i).size() == 0) {
-                continue;
-            }
             result += stacks.get(i).get(stacks.get(i).size() - 1);
         }
         return result;

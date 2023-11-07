@@ -9,6 +9,8 @@ interface Type {
     public int getSize();
 
     public int getSize(Map<String, Integer> dirSizes);
+
+    public void print(BufferedWriter writer);
 }
 
 class Directory implements Type {
@@ -53,7 +55,7 @@ class Directory implements Type {
         if (_parent == null) {
             return "/";
         } else {
-            return _parent.getPath() + "/" + _name;
+            return _parent.getPath() + _name + "/";
         }
     }
 
@@ -78,7 +80,28 @@ class Directory implements Type {
 
     @Override
     public String toString() {
-        return _name + " (dir)";
+        return " - " + _name + " (dir)";
+    }
+
+    @Override
+    public void print(BufferedWriter writer) {
+        try {
+            if (_parent != null) {
+                for (char c : getPath().toCharArray()) {
+                    if (c == '/') {
+                        writer.write("  ");
+                    }
+
+                }
+            }
+            writer.write(this.toString());
+            writer.newLine();
+            for (Type type : _children) {
+                type.print(writer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -103,7 +126,7 @@ class File implements Type {
         if (_parent == null) {
             return "/" + _name;
         } else {
-            return _parent.getPath() + _name + "/";
+            return _parent.getPath() + _name;
         }
     }
 
@@ -119,7 +142,23 @@ class File implements Type {
 
     @Override
     public String toString() {
-        return _name + " (file, size=" + _size + ")";
+        return " - " + _name + " (file, size=" + _size + ")";
+    }
+
+    @Override
+    public void print(BufferedWriter writer) {
+        try {
+            for (char c : getPath().toCharArray()) {
+                if (c == '/') {
+                    writer.write("  ");
+                }
+
+            }
+            writer.write(this.toString());
+            writer.newLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -213,7 +252,13 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
+        Directory root = main.parseFile();
         System.out.println(main.partOne());
         System.out.println(main.partTwo());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
+            root.print(writer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

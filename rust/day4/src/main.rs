@@ -1,3 +1,4 @@
+mod lib;
 use std::fs;
 
 const FILE_NAME: &str = "input.txt";

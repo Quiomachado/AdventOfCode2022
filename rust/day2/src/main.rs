@@ -81,7 +81,7 @@ fn part_two() -> i32 {
     let mut total_score = 0;
 
     for line in moves.iter() {
-        let opp_move = Move::from_str(&line[..1]).clone();
+        let opp_move = Move::from_str(&line[..1]);
         let outcome = &line[2..];
         let my_move;
         match outcome {
